@@ -9,7 +9,7 @@
   
     
     <table align = "center" border ="1">
-    <?php 
+    <?php   
 
         require 'establisDBconnection';
 
