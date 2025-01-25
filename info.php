@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-
+  
     
     <table align = "center" border ="1">
     <?php 
