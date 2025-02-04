@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Users - Project Tracker Pro</title>
+    <link rel="stylesheet" href="signusers.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <h1>Manage <span>Users</span></h1>
+        <nav>
+            <ul>
+                <li><a href="admindb.html">Dashboard</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <h3>Create New User</h3>
+            <form action="process-signup.php" method="POST">
+                <div class="form-group">
+                    <label for="first-name">Name</label>
+                    <div class="name-inputs">
+                        <input type="text" id="first-name" name="first-name" placeholder="Enter first name" required>
+                        <input type="text" id="last-name" name="last-name" placeholder="Enter last name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Assign Role</label>
+                    <select id="role" name="role" required>
+                        <option value="">-- Select Role --</option>
+                        <option value="manager">Manager</option>
+                        <option value="member">Member</option>
+                    </select>
+                </div>
+                <button type="submit" class="signup-btn">Create User</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2025 Project Tracker Pro.
+    </footer>
+</body>
+</html>

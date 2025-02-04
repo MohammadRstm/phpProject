@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tasks</title>
+    <link rel="stylesheet" href="membertasks.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <h1>My <span style="color:#ff5722;" >Tasks</span></h1>
+        <nav>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="tasks-container">
+            
+            <div class="task-card">
+                <h3>Task 1: Design Homepage</h3>
+                <div class="form-group">
+                    <label for="status1">Status:</label>
+                    <select id="status1">
+                        <option value="not-started">Not Started</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="form-group file-upload-container">
+                    <label for="file-upload1" class="custom-upload-btn">Upload File</label>
+                    <input type="file" id="file-upload1">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        2025 Project Tracker Pro.
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url("643353.png"); /* Your background image */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    position: relative; /* Required for the overlay */
+}
+
+/* Dark Hue Overlay */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    z-index: -1; /* Place the overlay behind the content */
+}
+
+
+/* Header Styles */
+.header {
+    width: 100%;
+    padding: 20px 50px;
+    background: rgba(0, 0, 0, 0.9); /* Dark background */
+    display: flex;
+    justify-content: space-between; /* Distribute space evenly */
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    box-sizing: border-box;
+}
+.header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: white; /* Ensure the text is white */
+}
+
+.header span {
+    color: #ff5722; /* Highlighted color for the word 'Table' */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    margin-left: auto; /* Push nav to the right */
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #ff5722;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #ff7b72;
+}
+
+/* Fix Logout Button */
+nav ul li:last-child {
+    margin-left: auto; /* Push the logout button to the far right */
+}
+
+/* Container Styles */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    overflow-x: auto;
+    background: transparent; /* Keep container transparent */
+    padding: 20px;
+    border-radius: 8px; /* Rounded corners */
+    margin-top: 20px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #1f1f1f; /* Dark background for the table */
+    color: #fff; /* Light text color */
+    border-radius: 8px; /* Rounded corners for the table */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+/* Table Header Styles */
+th {
+    padding: 15px;
+    background: #333333; /* Darker background for the header */
+    color: #ff5722; /* Orange text for header */
+    text-align: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow on the header */
+}
+
+/* Table Cell Styles */
+td {
+    padding: 15px;
+    border: 1px solid #444444; /* Slightly lighter borders */
+    text-align: left;
+    border-radius: 8px; /* Rounded corners for cells */
+}
+
+/* Alternate Row Colors */
+tbody tr:nth-child(odd) {
+    background-color: #2a2a2a; /* Dark background for odd rows */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #1f1f1f; /* Even rows with a darker shade */
+}
+
+/* Hover Effect for Rows */
+tbody tr:hover {
+    background-color: #444444; /* Light up the row on hover */
+    cursor: pointer;
+}
+
+/* Priority and Status Styles */
+.high { 
+    color: #e74c3c; /* Red for high priority */
+    font-weight: bold; 
+}
+
+.done { 
+    color: #2ecc71; /* Green for done status */
+    font-weight: bold; 
+}
+
+/* Progress Bar Styles */
+progress {
+    width: 100%;
+    height: 12px;
+    border-radius: 5px;
+    background-color: #444444; /* Dark background for progress bar */
+}
+
+progress::-webkit-progress-bar {
+    background-color: #555555; /* Dark background for progress bar */
+    border-radius: 5px;
+}
+
+progress::-webkit-progress-value {
+    background-color: #ff5722; /* Orange for progress bar */
+    border-radius: 5px;
+}
+
+/* Footer Styles */
+footer {
+    background: rgba(0, 0, 0, 0.9); /* Dark background */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-top: auto; /* Push footer to the bottom */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    th, td {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    margin-left: auto; /* Push nav to the right */
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #ff5722;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #ff7b72;
+}
