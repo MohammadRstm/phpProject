@@ -1,8 +1,7 @@
 <?php 
 session_start();
 include "establisDBconnection.php"; // Initiate database connection
-
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit'])){
     $stmt = $conn->prepare('INSERT INTO tasks (assigned_to, `description`, priority, project_id, title) VALUES (?, ?, ?, ?, ?)');
 
     $title = $_POST['title'];
@@ -81,23 +80,23 @@ if (isset($_POST['submit'])) {
         </thead>
         <tbody>
             <?php 
-            if (isset($_SESSION['WHO']) && isset($_SESSION['ID'])) {
+            if (isset($_SESSION['WHO']) && isset($_SESSION['ID'])){
                 if ($_SESSION['WHO']['isEmployee']) {
                     $stmt = $conn->prepare('SELECT tasks.task_id, tasks.title, tasks.assigned_to, tasks.priority, project.projectName 
-                                            FROM tasks 
+                                            FROM tasks
                                             JOIN project ON tasks.project_id = project.ID 
                                             WHERE tasks.assigned_to = ?');
-                    $stmt->bind_param('i', $_SESSION['ID']);
-                } elseif ($_SESSION['WHO']['isManager']) {
+                    $stmt->bind_param('i', $_SESSION['ID']['employeeID']);
+                } elseif ($_SESSION['WHO']['isManager']){
                     $stmt = $conn->prepare('SELECT tasks.task_id, tasks.title, tasks.assigned_to, tasks.priority, project.projectName 
                                             FROM tasks 
                                             JOIN project ON tasks.project_id = project.ID 
                                             WHERE project.managerID = ?');
-                    $stmt->bind_param('i', $_SESSION['managerID']);
+                    $stmt->bind_param('i', $_SESSION['ID']['managerID']);
                 } elseif ($_SESSION['WHO']['isAdmin']) {
                     $stmt = $conn->prepare('SELECT tasks.task_id, tasks.title, tasks.assigned_to, tasks.priority, project.projectName 
                                             FROM tasks 
-                                            JOIN project ON tasks.project_id = project.ID');
+                                            ');
                 }
 
                 if (isset($stmt)) {

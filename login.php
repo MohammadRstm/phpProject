@@ -11,9 +11,9 @@
 <?php
 
 require 'establisDBconnection';// establish DB connection 
-$_SESSION['managerID'] = -1;
-$_SESSION['adminID'] = -1;
-$_SESSION['employeeID'] = -1;
+$_SESSION['ID']['managerID'] = -1;
+$_SESSION['ID']['adminID'] = -1;
+$_SESSION['ID']['employeeID'] = -1;
 $_SESSION['WHO'] =[
     'isManager'=> false,
     'isAdmin'=> false,
@@ -131,7 +131,7 @@ function checkPassword($password , $username){// func to check the validity of t
 
             if ($count == 1) {// account found and is of type employee
                 $_SESSION['employeeID'] = $row['ID'];
-                echo "WELOME ".$row['firstname']." ".$row['lastname']."<br>YOUR ARE SIGNED IN AS AN EMPLOYEE"; 
+                echo "WELCOME ".$row['firstname']." ".$row['lastname']."<br>YOUR ARE SIGNED IN AS AN EMPLOYEE"; 
                 exit;
             }
             else if ($count == 0) {// no account 
