@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,8 +11,14 @@
 <?php
 
 require 'establisDBconnection';// establish DB connection 
-session_start();
 $_SESSION['managerID'] = -1;
+$_SESSION['adminID'] = -1;
+$_SESSION['employeeID'] = -1;
+$_SESSION['WHO'] =[
+    'isManager'=> false,
+    'isAdmin'=> false,
+    'isEmployee'=> false,
+];
 $errorPassMessage = "";
 $errorUserMessage = "";
 $stmt;
@@ -93,11 +100,11 @@ function checkPassword($password , $username){// func to check the validity of t
         // take username and password
         $username = $_POST["username"];
         $password= $_POST["password"];
+        $who = $_POST["spinner"];
         // user and pass check (triggers)
         if (!checkUsername($username) ){
             echo $errorUserMessage;
             header("location : login.php");
-
         }  
         if (!checkPassword($password , $username) ){
             echo $errorUserMessage;
@@ -105,8 +112,8 @@ function checkPassword($password , $username){// func to check the validity of t
 
         }       
 
-        if ($_POST["submit"] = "signInAsEmployee"){
-
+        if ($who == "signInAsEmployee"){
+            $_SESSION["WHO"]["isEmployee"] = true;
             //check if user in database in database
             
             $stmt = $conn-> prepare("SELECT COUNT(ID) FROM employee WHERE username = ? and employeePasswordHash = ?");
@@ -123,18 +130,21 @@ function checkPassword($password , $username){// func to check the validity of t
             }
 
             if ($count == 1) {// account found and is of type employee
+                $_SESSION['employeeID'] = $row['ID'];
                 echo "WELOME ".$row['firstname']." ".$row['lastname']."<br>YOUR ARE SIGNED IN AS AN EMPLOYEE"; 
                 exit;
             }
             else if ($count == 0) {// no account 
+                $_SESSION["WHO"]["isEmployee"] = false;
                 echo "SORRY WE DON'T HAVE ANYONE WITH THIS ACCOUNT.";
                 exit;
             }else{// shouldnt happen 
+                $_SESSION["WHO"]["isEmployee"] = false;
                 echo"ERRO CODE : 1001";
                 exit;
             }
-        }else if ($_POST["submit"] = "signInAsManager") {
-
+        }else if ($who = "signInAsManager") {
+            $_SESSION["WHO"]["isManager"] = true;
             $stmt = $conn->prepare("SELECT COUNT(ID) FROM manager WHERE userName = ? AND managerPasswrodHash = ?");
             $stmt->bind_param("ss", $username , $password);
             
@@ -145,13 +155,40 @@ function checkPassword($password , $username){// func to check the validity of t
             while ($row = $result->fetch_assoc()) { $count++;}
             if ($count == 1) { 
                 echo "WELCOME ".$row["firstname"]." ".$row["lastname"]."<br>YOU SIGNED IN AS A MANAGER";
-                $_SESSION["managerID"]  = $row[ID];// save manager's id incase a signup occures
+                $_SESSION["managerID"]  = $row['ID'];// save manager's id incase for signing up employees
                 exit;
             }else if ($count == 0) {// no account 
+                $_SESSION["WHO"]["isManager"] = false;
                 echo "SORRY WE DON'T HAVE ANYONE WITH THIS ACCOUNT.";
                 exit;
             }else{// shouldnt happen 
-                echo"ERRO CODE : 1001";
+                $_SESSION["WHO"]["isManager"] = false;
+                echo"ERROR CODE : 1001";
+                exit;
+            }
+        }else if ($who == "isAdmin"){
+            $_SESSION["WHO"]["isAdmin"] = true;
+
+            $stmt = $conn->prepare("SELECT COUNT(id) FROM admin WHERE username = ? and password = ?");
+            $stmt->bind_param("ss", $username , $password);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            while ($row = $result->fetch_assoc()) { $count++; }
+
+            if ($count == 1) {
+                $_SESSION["adminID"] = $row["ID"];
+                echo "Signed in successfully as admin";
+                exit;
+            }else if($count == 0) {
+                $_SESSION["WHO"]["isAdmin"] = false;
+                echo"User not found";
+                exit;
+            }else{
+                $_SESSION["WHO"]["isEmployee"] = false;
+                echo"ERROR CODE : 1001";
                 exit;
             }
         }

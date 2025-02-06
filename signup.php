@@ -10,16 +10,14 @@
 
 require 'establisDBconnection';// establish DB connection 
 session_start();
-$userID = $_SESSION["managerID"];
 
-if ($userID == -1 ){ // check if the user is a manager (if not head to login page)
-    echo "ONLY MANAGERS CAN ACCESS THIS PAGE";
+if (!$_SESSION["isAdmin"] && !$_SESSION["isManager"] ){ // check if the user is a manager (if not head to login page)
+    echo "ONLY ADMINS/MANAGERS CAN ACCESS THIS PAGE";
     header ("location : login.php");
     exit;
 }
 
-$errorPassMessage = "";// for password
-$errorUserMessage = "";// for username
+$errorMessage = "";// for password
 
 function checkUsername($username) {
 
@@ -32,16 +30,8 @@ function checkUsername($username) {
     }
     // special characters check
     if (preg_match("/[^a-zA-z0-9]/", $username)) {
-        $errorPassMessage = "username can't contain any special characters\n";
+        $errorMessage = "username can't contain any special characters\n";
         return false;
-    }
-
-    // space check
-    for ( $i = 0; $i < strlen($username); $i++ ) {
-        if (username[$i] == ' ') {
-            $errorPassMessage = "username can't contain password\n";
-            return false;
-        }
     }
 
     return true;
@@ -50,14 +40,14 @@ function checkUsername($username) {
 
 function checkPassword($password , $username , $password_confirm){// func to check the validity of the password as a string
     // check if password confirmation match password
-    if (strcmp($password , $password_confirm) == 0) {
-        $errorPassMessage = "password conformation doesn't match\n";
+    if (strcmp($password , $password_confirm) != 0) {
+        $errorMessage = "password conformation doesn't match\n";
         return false;
     }
 
     // SAME AS USER NAME CHECK
     if ($password == $username){
-         $errorPassMessage = "password can't be the same as the password\n";
+         $errorMessage = "password can't be the same as the password\n";
          return false;
     }
     
@@ -66,31 +56,31 @@ function checkPassword($password , $username , $password_confirm){// func to che
 
     // LENGTH CHECK
     if ($passlen < 6) {
-        $errorPassMessage = "password can't be 6 character or less\n";
+        $errorMessage = "password can't be 6 character or less\n";
         return false;
     }
 
     // SUB-STRING CHECK
     for ($i = 0; $i < $passlen - $userlen + 1 ; $i++) {
         if (strcmp( substr($username , $i,$passlen), $password) == 0) {
-            $errorPassMessage = "password can't be a sub-string of your username\n";
+            $errorMessage = "password can't be a sub-string of your username\n";
             return false;
          }
     }
 
     // CHECK FOR CAPITAL LETTERS 
    if (!preg_match('/[A-Z]/' , $password)){
-    $errorPassMessage = "password must contain atleast one capital letter\n";
+    $errorMessage = "password must contain atleast one capital letter\n";
     return false;
    }
    // check for spcial characters
    if (preg_match('/[^a-zA-Z0-9]/',$password)){
-    $errorPassMessage = "password must contain atleast one special character\n";
+    $errorMessage = "password must contain atleast one special character\n";
     return false;
    }
 
    if (preg_match('/[^0-9]/' , $password)){
-    $errorPassMessage = "password must contain atleast one number\n";
+    $errorMessage = "password must contain atleast one number\n";
     return false;
    }
 
@@ -98,6 +88,15 @@ function checkPassword($password , $username , $password_confirm){// func to che
 
 
 }
+function checkName($name){
+     // special characters check
+     if (preg_match("/[^a-zA-z0-9]/", $name)) {
+        $errorMessage = "username can't contain any special characters\n";
+        return false;
+    }
+}
+
+
 
 
 
@@ -116,7 +115,7 @@ if (isset($_POST["submit"])){
 
 
     //some constraints on the username 
-    if (!checkUsername($username)){
+    if (!checkUsername($username) ){
         echo $errorUserMessage;
         header("location : signup.php");
     }
@@ -127,13 +126,22 @@ if (isset($_POST["submit"])){
         header("location : signup.php");
     }
 
-
+    if (!checkName( $firstname) || !checkName( $lastname) ){
+        echo $errorUserMessage;
+        header("location : signup.php");
+    }
 
     // All checks are good 
-    
+    $stmt;
+    if ($_SESSION["WHO"]['isManager']){
     $stmt = $conn->prepare("INSERT INTO TABLE
                                     employee (firstname , lastname , age , username , employeePasswordHash , managerID ) 
                                     values (? , ? , ? , ? , ? , ?  , ?)");
+    }else if ($_SESSION["WHO"]["isAdmin"]){
+    $stmt = $conn->prepare("INSERT INTO TABLE
+                                  manager (firstname , lastname , age , username , employeePasswordHash , managerID) 
+        values (? , ? , ? , ? , ? , ?  , ?)");
+    }
 
     $stmt->bind_param("ssissis",$firstname , $lastname , $age , $username , $password , $_SESSION['managerID']);
 
@@ -142,7 +150,7 @@ if (isset($_POST["submit"])){
     if ($stmt->affected_rows() > 0){
         echo "employee successfully added";
     }else{// shouldn't happen 
-        echo "ERROR CODE 1002";
+        echo "ERROR CODE : 1002";
     }
 
     $stmt->close();
