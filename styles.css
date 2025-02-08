@@ -12,6 +12,10 @@ body {
     overflow-x: hidden;
 }
 
+.no-underline {
+    text-decoration: none;
+}
+
 body::before {
     content: ''; 
     position: absolute;

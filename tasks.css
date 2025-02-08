@@ -13,6 +13,10 @@ body {
     position: relative; /* Required for the overlay */
 }
 
+.card-link{
+    text-decoration: none ;
+}
+
 /* Dark Hue Overlay */
 body::before {
     content: '';
