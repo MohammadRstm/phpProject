@@ -114,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit']) && $_POST['
                 } elseif ($_SESSION['WHO']['isAdmin']) {
                     $stmt = $conn->prepare('SELECT tasks.task_id, tasks.title, tasks.assigned_to, tasks.priority, project.projectName,tasks.status,project.ID 
                                             FROM tasks ,project
+                                            WHERE tasks.project_id = project.ID
                                             ');
                 }
                 if (isset($stmt)) {
@@ -128,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit']) && $_POST['
                                 <td>{$row['status']}</td>
                                 <td>{$row['projectName']}</td>
                                 <td>{$row['ID']}</td>";?>
-                                <td><a href="#" class="delete-task card-link" data-id="{$row['task_id']}">Delete</a></td>
+                                <td><a href="#" class="delete-task card-link" data-id="<?php echo $row['task_id']; ?>">Delete</a></td>
                                 <?php echo"
                             </tr>";
                     }
@@ -148,21 +149,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit']) && $_POST['
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".delete-task").forEach(function (deleteBtn) {
         deleteBtn.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent page reload
+            event.preventDefault();
 
-            let taskId = this.getAttribute("data-id"); // Get task ID from data attribute
-            let row = this.closest("tr"); // Get the row to remove
+            let taskId = this.getAttribute("data-id");
+            console.log("Task ID to delete:", taskId);  // Debugging
+
+            if (!taskId) {
+                alert("Task ID not found.");
+                return;
+            }
+
+            let row = this.closest("tr");
 
             if (confirm("Are you sure you want to delete this task?")) {
                 fetch("delete_task.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: "delete=" + taskId
+                    body: "delete=" + encodeURIComponent(taskId)
                 })
                 .then(response => response.text())
                 .then(data => {
+                    console.log("Server Response:", data); // Debugging
                     if (data.trim() === "success") {
-                        row.remove(); // Remove the row from the table
+                        row.remove();
                     } else {
                         alert("Failed to delete the task.");
                     }
@@ -172,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
 </script>
         
 </body>
