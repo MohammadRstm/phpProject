@@ -1,13 +1,17 @@
 <?php session_start(); 
 include 'establisDBconnection.php';// establish DB connection 
-$_SESSION['ID']['managerID'] = -1;
-$_SESSION['ID']['adminID'] = -1;
-$_SESSION['ID']['employeeID'] = -1;
+$_SESSION['ID']=[
+    'adminID'=> -1,
+    'employeeID'=> -1,
+    'managerID'=> -1,
+];
 $_SESSION['WHO'] =[
     'isManager'=> false,
     'isAdmin'=> false,
     'isEmployee'=> false,
 ];
+$_SESSION['errorMessage'] = "";
+
 $errorPassMessage = "";
 $errorUserMessage = "";
 $stmt;
@@ -100,7 +104,7 @@ function checkPassword($password , $username){// func to check the validity of t
             echo "Error: Could not open log file.";
         }
         // take username and password
-        $username = $_POST["username"];
+        $username = $_POST["username"]; 
         $password= $_POST["password"];
         $who = $_POST["role"];
         // user and pass check (triggers)
@@ -119,43 +123,37 @@ function checkPassword($password , $username){// func to check the validity of t
             $_SESSION["WHO"]["isEmployee"] = true;
             //check if user in database in database
             
-            $stmt = $conn-> prepare("SELECT ID FROM employee WHERE username = ? and employeePasswordHash = ?");
+            $stmt = $conn-> prepare("SELECT * FROM employee WHERE userName = ? and employeePasswordHash = ?");
             $stmt->bind_param("ss", $username , $password);
 
             $stmt->execute();
 
             $result = $stmt->get_result();
             $count = 0;
-            $row;
-
-            while($row = $result->fetch_assoc()) {// move through result (should have only one row)
+            while($row = $result->fetch_assoc()) {
+                $_SESSION['ID']['employeeID'] = $row['ID'];
                 $count++;
             }
-
             if ($count == 1) {// account found and is of type employee
-                $_SESSION['employeeID'] = $row['ID'];
                 $stmt->close();
                 $conn->close();
-                //echo "WELCOME ".$row['firstname']." ".$row['lastname']."<br>YOUR ARE SIGNED IN AS AN EMPLOYEE"; 
                 header("Location:memberdb.html");
                 exit;
             }
             else if ($count == 0) {// no account 
                 $_SESSION["WHO"]["isEmployee"] = false;
-                //echo "SORRY WE DON'T HAVE ANYONE WITH THIS ACCOUNT.";
                 $stmt->close();
                 $conn->close();
+                header("Location:login.php");
                 exit;
             }else{// shouldnt happen 
                 $_SESSION["WHO"]["isEmployee"] = false;
                 $stmt->close();
                 $conn->close();
-                //echo"ERRO CODE : 1001";
+                header("Location:login.php");
                 exit;
             }
         }else if ($who == "manager") {
-           
-
             $_SESSION["WHO"]["isManager"] = true;
             $stmt = $conn->prepare("SELECT ID FROM manager WHERE userName = ? AND managerPasswordHash = ?");
             $stmt->bind_param("ss", $username , $password);
@@ -165,25 +163,24 @@ function checkPassword($password , $username){// func to check the validity of t
             $result = $stmt->get_result();
             $count = 0;
 
-            while ($row = $result->fetch_assoc()) { $count++;}
+            while ($row = $result->fetch_assoc()) { 
+                $_SESSION["ID"]["managerID"] = $row["ID"];
+                $count++;
+            }
             if ($count == 1) {
-                $_SESSION["managerID"]  = $row['ID'];// save manager's id incase for signing up employees
                 $stmt->close();
                 $conn->close();
                 header("Location:managerdb.html"); 
-                //echo "WELCOME ".$row["firstname"]." ".$row["lastname"]."<br>YOU SIGNED IN AS A MANAGER";
                 exit;
             }else if ($count == 0) {// no account 
                 $_SESSION["WHO"]["isManager"] = false;
                 $stmt->close();
                 $conn->close();
-                //echo "SORRY WE DON'T HAVE ANYONE WITH THIS ACCOUNT.";
                 exit;
             }else{// shouldnt happen 
                 $_SESSION["WHO"]["isManager"] = false;
                 $stmt->close();
                 $conn->close();
-                //echo"ERROR CODE : 1001";
                 exit;
             }
         }else if ($who == "admin"){
@@ -196,30 +193,28 @@ function checkPassword($password , $username){// func to check the validity of t
             $result = $stmt->get_result();
             $count = 0;
 
-            while ($row = $result->fetch_assoc()) { $count++; }
+            while ($row = $result->fetch_assoc()) {
+                $_SESSION["ID"]["adminID"] = $row["id"];
+                 $count++;
+            }
 
             if ($count == 1) {
-                $_SESSION["adminID"] = $row["id"];
                 $stmt->close();
                 $conn->close();
                 header("Location:admindb.html");
-                //echo "Signed in successfully as admin";
                 exit;
             }else if($count == 0) {
                 $_SESSION["WHO"]["isAdmin"] = false;
                 $stmt->close();
                 $conn->close();
-                //echo"User not found";
                 exit;
             }else{
                 $_SESSION["WHO"]["isEmployee"] = false;
                 $stmt->close();
                 $conn->close();
-                //echo"ERROR CODE : 1001";
                 exit;
             }
         }       
-
     }
 
 ?>
