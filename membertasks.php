@@ -66,7 +66,7 @@ if (!isset($_SESSION["ID"]) || !$_SESSION["WHO"]["isEmployee"]) { // check if so
         <h1>My <span style="color:#ff5722;">Tasks</span></h1>
         <nav>
             <ul>
-                <li><a href="#">Dashboard</a></li>
+                  <li><a href="memberdb.php">Dashboard</a></li>
                 <li><a href="#">Logout</a></li>
             </ul>
         </nav>
