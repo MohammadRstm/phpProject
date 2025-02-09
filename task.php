@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit']) && $_POST['
     <h1><span style="color: white;">Table of </span> <span>Tasks</span></h1>
     <nav>
         <ul>
-            <li><a href="memberdb.html">Dashboard</a></li>
+            <li><a href="memberdb.php">Dashboard</a></li>
             <li><a href="logout.html">Logout</a></li>
         </ul>
     </nav>
