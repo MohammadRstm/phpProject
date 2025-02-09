@@ -207,11 +207,13 @@ function checkPassword($password , $username){// func to check the validity of t
                 $_SESSION["WHO"]["isAdmin"] = false;
                 $stmt->close();
                 $conn->close();
+                header("Location:login.php");
                 exit;
             }else{
-                $_SESSION["WHO"]["isEmployee"] = false;
+                $_SESSION["WHO"]["isAdmin"] = false;
                 $stmt->close();
                 $conn->close();
+                header("Location:login.php");
                 exit;
             }
         }       
