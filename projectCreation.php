@@ -2,7 +2,7 @@
 session_start();  // Start the session
 // Check if the user is logged in and is an admin
 
-if (!isset($_SESSION['ID']) || $_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['ID']) || !isset($_SESSION["ID"]["adminID"])) {
     // Redirect to login page or show an error message
     header("Location: login.php");  // Replace 'login.php' with your login page
     exit();
