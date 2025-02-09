@@ -137,7 +137,7 @@ function checkPassword($password , $username){// func to check the validity of t
             if ($count == 1) {// account found and is of type employee
                 $stmt->close();
                 $conn->close();
-                header("Location:memberdb.html");
+                header("Location:memberdb.php");
                 exit;
             }
             else if ($count == 0) {// no account 
@@ -170,7 +170,7 @@ function checkPassword($password , $username){// func to check the validity of t
             if ($count == 1) {
                 $stmt->close();
                 $conn->close();
-                header("Location:managerdb.html"); 
+                header("Location:managerdb.php"); 
                 exit;
             }else if ($count == 0) {// no account 
                 $_SESSION["WHO"]["isManager"] = false;
@@ -201,7 +201,7 @@ function checkPassword($password , $username){// func to check the validity of t
             if ($count == 1) {
                 $stmt->close();
                 $conn->close();
-                header("Location:admindb.html");
+                header("Location:admindb.php");
                 exit;
             }else if($count == 0) {
                 $_SESSION["WHO"]["isAdmin"] = false;

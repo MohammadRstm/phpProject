@@ -132,3 +132,5 @@ adding to tasks nfkadding to tasks ,fk25-02-09 in Login helper
 25-02-09 Role: admin
 25-02-09 in Login helper
 25-02-09 Role: admin
+25-02-09 in Login helper
+25-02-09 Role: manager
