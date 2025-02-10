@@ -5,10 +5,9 @@ include('establisDBconnection.php');
 
 
 // Check if the session contains the manager's ID
-if (!isset($_SESSION["ID"]) || !isset($_SESSION["ID"]["managerID"])) {
-    // If no manager ID in session, redirect to login or show an error
-    echo "Manager not logged in.";
-    exit;
+if (!$_SESSION["WHO"]['isManager']){
+    header('Location:login.php');
+    exit();
 }
 
 // Get the manager ID from the session
