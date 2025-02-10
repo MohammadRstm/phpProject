@@ -95,12 +95,25 @@ if (isset($_POST["submit"])){
         $stmt = $conn->prepare("SELECT * FROM employee WHERE username = ?");
         $stmt->bind_param("s", $username); $stmt->execute() or die("failed to execute query". $stmt->error);
         $res = $stmt->get_result();
-        if ($res->num_rows > 0) {
+
+        $stmt1 = $conn->prepare("SELECT * FROM manager WHERE username = ?");
+        $stmt1->bind_param("s", $username);
+        $stmt1->execute() or die("Failed to execute query".$stmt1->error);
+        $res1 = $stmt1->get_result();
+
+        $stmt2 = $conn->prepare("SELECT * FROM admin WHERE username = ?");
+        $stmt2->bind_param("s", $username); $stmt2->execute() or die("Failed to execute query".$stmt2->error);
+        $res2 = $stmt2->get_result();
+
+
+        if ($res->num_rows > 0 || $res1->num_rows > 0 || $res2->num_rows > 0) {// if user name exists anywhere in the data base then refuse to add
             header ("Location:signusers.php?$queryParams&userFound=1");
+            $stmt->close();
+            exit();
         }
         $stmt->close();
-        $conn->close();
-        exit();
+        $stmt1->close();
+        $stmt2->close();
     }
 
     if (($str = checkPassword($password, $username, $password_confirm)) != "") {
