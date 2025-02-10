@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 include "establisDBconnection.php";
 
 // Check if the user is logged in
@@ -9,37 +8,24 @@ if (!isset($_SESSION['ID'])) {
     exit();
 }
 
-// Get the logged-in user's role (admin or manager)
-$isAdmin = isset($_SESSION['ID']['adminID']);
-$managerID = $_SESSION['ID']['managerID'] ?? null;
+// Determine user role
+$isAdmin = $_SESSION['WHO']['isAdmin'] ?? false;
+$isManager = $_SESSION['WHO']['isManager'] ?? false;
 
-// Build the query based on the user's role (admin or manager)
-if ($isAdmin) {
-    // Admin can see all employees managed by any manager
-    $query = "SELECT e.ID, e.firstName, e.lastName FROM employee e
-              INNER JOIN manager m ON e.managerID = m.ID";
-} elseif ($managerID) {
-    // Manager can see only their own employees
-    $query = "SELECT ID, firstName, lastName FROM employee WHERE managerID = ?";
-}
+// Query to get all employees (both managers and admins can see all employees)
+$query = "SELECT ID, firstName, lastName FROM employee";
 
-// Prepare and execute the query
 $stmt = $conn->prepare($query);
-
-// Bind the parameter for the manager (only for managers, not admins)
-if (!$isAdmin) {
-    $stmt->bind_param("i", $managerID);
-}
-
 $stmt->execute();
 $result = $stmt->get_result();
-
-// Fetch all the employees
 $employees = $result->fetch_all(MYSQLI_ASSOC);
 
-// Close the statement and connection
+// Close connection
 $stmt->close();
 $conn->close();
+
+// Determine dashboard redirection
+$dashboardPage = $isAdmin ? "admindb.php" : ($isManager ? "managerdb.php" : "#");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,64 +36,51 @@ $conn->close();
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* Table specific styles */
         table {
-            width: 70%; /* Made the table smaller */
+            width: 70%;
             margin: 20px auto;
             border-collapse: collapse;
-            background-color: #1d2128; /* Darker background for the table */
+            background-color: #1d2128;
             color: #fff;
-            border-radius: 8px; /* Rounded corners for the table */
-            overflow: hidden; /* Prevents table border from overflowing */
+            border-radius: 8px;
+            overflow: hidden;
         }
-
         th, td {
             padding: 12px;
             text-align: left;
-            border: 1px solid #333; /* Dark border */
+            border: 1px solid #333;
         }
-
         th {
-            background-color: #222; /* Darker background for header */
+            background-color: #222;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
         tr:nth-child(even) {
-            background-color: #2a2f38; /* Slightly lighter background for even rows */
+            background-color: #2a2f38;
         }
-
         tr:hover {
-            background-color: #444b57; /* Dark hover effect */
+            background-color: #444b57;
         }
-
         td, th {
-            font-size: 14px; /* Slightly smaller font */
+            font-size: 14px;
             text-transform: capitalize;
         }
-
-        /* Styling for header */
         .header h1 {
             font-size: 2rem;
             color: #fff;
         }
-        
         .header nav ul {
             display: flex;
             list-style-type: none;
         }
-
         .header nav ul li {
             margin-right: 20px;
         }
-
         .header nav ul li a {
             color: #fff;
             text-decoration: none;
         }
-
-        /* Footer styles */
         .footer {
             text-align: center;
             color: #fff;
@@ -118,17 +91,17 @@ $conn->close();
 </head>
 <body>
     <header class="header">
-        <h1>View <span style="color: #ff5722; ">Employees</span></h1>
+        <h1>View <span style="color: #ff5722;">Employees</span></h1>
         <nav>
             <ul>
-                <li><a href="dashboard.php">Dashboard</a></li>
+                <li><a href="<?= $dashboardPage ?>">Dashboard</a></li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
     </header>
 
     <section class="hero">
-        <p>List of employees under your management.</p>
+        <p>List of all employees.</p>
     </section>
 
     <div class="container">
