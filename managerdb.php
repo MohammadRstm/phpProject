@@ -1,7 +1,11 @@
 <?php
 session_start();
-
 include "establisDBconnection.php";
+
+if (!$_SESSION["WHO"]['isManager']){
+    header('Location:login.php');
+    exit();
+}
 
 $stmt = $conn->prepare("SELECT firstName , lastName FROM manager 
                         WHERE manager.ID = ?");

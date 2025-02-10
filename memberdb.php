@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+if (!$_SESSION["WHO"]["isEmployee"]){
+    header("Location:login.php");
+    exit();
+}
+
 include "establisDBconnection.php";
 
 $stmt = $conn->prepare("SELECT firstName , lastName FROM employee 

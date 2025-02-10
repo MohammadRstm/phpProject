@@ -1,5 +1,13 @@
 <?php 
 session_start();
+
+if (!$_SESSION["WHO"]['isAdmin'] || $_SESSION['ID']['adminID'] == -1){
+    header('Location:login.php');
+    exit();
+}
+
+print_r($_SESSION['WHO']);
+
 ?>
 <!DOCTYPE html> 
 <html lang="en">
