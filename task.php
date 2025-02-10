@@ -90,7 +90,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit']) && $_POST['
             echo "<li><a href=\"admindb.php\">Dashboard</a></li>";
             }else{
                 // shouldn't happen
-                echo "wtf";
+                header("Location:login.php");
+                exit();
             }
             ?>
             <li><a href="logout.php">Logout</a></li>

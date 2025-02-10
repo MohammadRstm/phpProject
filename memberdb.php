@@ -45,7 +45,7 @@ $conn->close();
         <h1>Project <span>Tracker</span> Pro</h1>
         <nav>
             <ul>
-                <li><a href="#">Profile</a></li>
+                <li><a href="profile.php">Profile</a></li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>

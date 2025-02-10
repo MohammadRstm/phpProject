@@ -1,11 +1,23 @@
 <?php 
 session_start();
+include "establisDBconnection.php";
 
 if (!$_SESSION["WHO"]['isAdmin'] || $_SESSION['ID']['adminID'] == -1){
     header('Location:login.php');
     exit();
 }
 
+$stmt = $conn->prepare('SELECT * FROM `admin` WHERE id = ?');
+$stmt->bind_param('i', $_SESSION['ID']["adminID"]);
+$stmt->execute();
+$res = $stmt->get_result();
+
+$row = $res->fetch_assoc();
+if ($res->num_rows == 1){
+    $name = $row["first_name"]." ".$row['last_name'];
+}
+$stmt->close();
+$conn->close();
 
 ?>
 <!DOCTYPE html> 
@@ -22,14 +34,14 @@ if (!$_SESSION["WHO"]['isAdmin'] || $_SESSION['ID']['adminID'] == -1){
         <h1>Project <span>Tracker</span> Pro</h1>
         <nav>
             <ul>
-                <li><a href="#">Profile</a></li>
+                <li><a href="profile.php">Profile</a></li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
     </header>
 
     <section class="hero">
-        <h2>Welcome, <span>Admin!</span></h2>
+        <h2>Welcome, <span>Admin <?php echo $name; ?></span></h2>
         <p>You have full control over the platform.</p>
     </section>
 
