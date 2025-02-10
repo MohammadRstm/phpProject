@@ -3,20 +3,13 @@
 include 'establisDBconnection.php';// establish DB connection 
 session_start();
 
-$errorMessage = "";// for password
-
+// function to check the validity of the user as a string and check if there is a duplicate in data base
 function checkUsername($username) {
 
     $len = strlen($username);
 
     // lenght check
     if ($len <= 6){
-        $errorserMessage = "username can't be less than or equal 6 characters\n";
-        return false;
-    }
-    // special characters check
-    if (preg_match("/[^a-zA-z0-9]/", $username)) {
-        $errorMessage = "username can't contain any special characters\n";
         return false;
     }
 
@@ -27,14 +20,12 @@ function checkUsername($username) {
 function checkPassword($password , $username , $password_confirm){// func to check the validity of the password as a string
     // check if password confirmation match password
     if (strcmp($password , $password_confirm) != 0) {
-        $errorMessage = "password conformation doesn't match\n";
-        return false;
+        return "missmatch";
     }
 
     // SAME AS USER NAME CHECK
     if ($password == $username){
-         $errorMessage = "password can't be the same as the password\n";
-         return false;
+         return "matchusername";
     }
     
     $passlen = strlen($password);
@@ -42,44 +33,29 @@ function checkPassword($password , $username , $password_confirm){// func to che
 
     // LENGTH CHECK
     if ($passlen < 6) {
-        $errorMessage = "password can't be 6 character or less\n";
-        return false;
+        return "length";
     }
 
     // SUB-STRING CHECK
-    for ($i = 0; $i < $passlen - $userlen + 1 ; $i++) {
-        if (strcmp( substr($username , $i,$passlen), $password) == 0) {
-            $errorMessage = "password can't be a sub-string of your username\n";
-            return false;
-         }
+    for ($i = 0; $i <= $userlen - $passlen; $i++) {
+        if (strcmp(substr($username, $i, $passlen), $password) == 0) {
+            return "foundinusername";
+        }
     }
 
     // CHECK FOR CAPITAL LETTERS 
    if (!preg_match('/[A-Z]/' , $password)){
-    $errorMessage = "password must contain atleast one capital letter\n";
-    return false;
+    return "capital";
    }
    // check for spcial characters
-   if (preg_match('/[^a-zA-Z0-9]/',$password)){
-    $errorMessage = "password must contain atleast one special character\n";
-    return false;
-   }
-
-   if (preg_match('/[^0-9]/' , $password)){
-    $errorMessage = "password must contain atleast one number\n";
-    return false;
-   }
-
-   return true;
-
-
+   if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+    return "special";
 }
-function checkName($name){
-     // special characters check
-     if (preg_match("/[^a-zA-z0-9]/", $name)) {
-        $errorMessage = "username can't contain any special characters\n";
-        return false;
-    }
+
+
+   return "";
+
+
 }
 
 
@@ -101,23 +77,48 @@ if (isset($_POST["submit"])){
     
 
 
-    //some constraints on the username 
-   /* if (!checkUsername($username) ){
-        echo $errorUserMessage;
-        header("location : signup.php");
+    $role = $_SESSION['signup']; // Get the role (admin, manager, or member)
+    
+
+    $queryParams = http_build_query([
+        "$role" => 1,
+        "firstname" => $firstname,
+        "lastname" => $lastname,
+        "age" => $age,
+        "assignManager" => $manager ?? null
+    ]);
+
+    if (!checkUsername($username)) {
+        header("Location: signusers.php?$queryParams&username=1");
+        exit();
+    }else if (checkUsername($username)) {// check if already in data base
+        $stmt = $conn->prepare("SELECT * FROM employee WHERE username = ?");
+        $stmt->bind_param("s", $username); $stmt->execute() or die("failed to execute query". $stmt->error);
+        $res = $stmt->get_result();
+        if ($res->num_rows > 0) {
+            header ("Location:signusers.php?$queryParams&userFound=1");
+        }
+        $stmt->close();
+        $conn->close();
         exit();
     }
 
-    // check password 
-    if (!checkPassword($password , $username , $password_confirm)){
-        echo $errorPassMessage;
-        header("location : signup.php");
-    }
+    if (($str = checkPassword($password, $username, $password_confirm)) != "") {
+        $passwordError = match ($str) {
+            "missmatch" => "missmatch=1",
+            "length" => "length=1",
+            "number" => "number=1",
+            "capital" => "capital=1",
+            "special" => "special=1",
+            "foundinusername" => "foundinusername=1",
+            "matchusername" => "matchusername=1",
+            default => ""
+        };
 
-    if (!checkName( $firstname) || !checkName( $lastname) ){
-        echo $errorUserMessage;
-        header("location : signup.php");
-    }*/
+    header("Location: signusers.php?$queryParams&password=1&$passwordError");
+        exit();
+    }
+}
 
     // All checks are good 
     $stmt;
@@ -157,6 +158,6 @@ if ($_SESSION['added']) {
     exit();
 }
 
-}
+
 ?>
 
