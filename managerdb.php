@@ -9,7 +9,6 @@ $stmt->bind_param("i" , $_SESSION['ID']['managerID']);
 $stmt->execute();
 $result = $stmt->get_result();
 
-
 $row = $result->fetch_assoc();
 if ($result->num_rows == 1){// should be only one manager in results 
     $name = $row['firstName']." ".$row['lastName'];
@@ -43,16 +42,22 @@ $conn->close();
     </section>
 
     <div class="container">
-    <a href = "task.php" class ="card-link" >
-        <div class="card">
-            <h3>✅ Task Assignments</h3>
-            <p>Assign tasks to team members and track their progress.</p>
-        </div>
-    </a>
+        <a href="task.php" class="card-link">
+            <div class="card">
+                <h3>✅ Task Assignments</h3>
+                <p>Assign tasks to team members and track their progress.</p>
+            </div>
+        </a>
         <a href="projectDetails.php" class="card-link">
             <div class="card">
                 <h3>📊 Project Analytics</h3>
                 <p>Monitor the progress and performance of your projects.</p>
+            </div>
+        </a>
+        <a href="viewEmployees.php" class="card-link">
+            <div class="card">
+                <h3>👥 View Employees</h3>
+                <p>View and manage the employees working under your projects.</p>
             </div>
         </a>
     </div>
