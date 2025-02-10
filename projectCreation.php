@@ -28,7 +28,6 @@ if ($result->num_rows > 0) {
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $projectID = $_POST['project-id'];
     $projectName = $_POST['project-name'];
     $managerID = $_POST['manager-id'];
     $deadline = $_POST['deadline'];
@@ -36,8 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $formattedDeadline = date('Y-m-d', strtotime($deadline));
     
     // Prepare and bind
-    $stmt = $conn->prepare("INSERT INTO project (id, projectName, managerID, deadline, dateCreated, projectDone) VALUES (?, ?, ?, ?, NOW(), 'NO')");
-    $stmt->bind_param("isss", $projectID, $projectName, $managerID, $formattedDeadline);
+    $stmt = $conn->prepare("INSERT INTO project (projectName, managerID, deadline, dateCreated, projectDone) VALUES (?, ?, ?, NOW(), 'NO')");
+    $stmt->bind_param("sss", $projectName, $managerID, $formattedDeadline);
 
     // Execute and check if the insertion is successful
     if ($stmt->execute()) {
@@ -86,9 +85,6 @@ $conn->close();
 
     <div class="container">
         <form class="project-form" method="POST" action="projectCreation.php">
-            <label for="project-id">Project ID:</label>
-            <input type="text" id="project-id" name="project-id" placeholder="Enter project ID" required>
-
             <label for="project-name">Project Name:</label>
             <input type="text" id="project-name" name="project-name" placeholder="Enter project name" required>
 
