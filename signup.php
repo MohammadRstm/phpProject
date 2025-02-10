@@ -1,21 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
 <?php
 
-require 'establisDBconnection';// establish DB connection 
+include 'establisDBconnection.php';// establish DB connection 
 session_start();
-
-if (!$_SESSION["isAdmin"] && !$_SESSION["isManager"] ){ // check if the user is a manager (if not head to login page)
-    echo "ONLY ADMINS/MANAGERS CAN ACCESS THIS PAGE";
-    header ("location : login.php");
-    exit;
-}
 
 $errorMessage = "";// for password
 
@@ -107,17 +93,19 @@ function checkName($name){
 if (isset($_POST["submit"])){
     $username = $_POST["username"];
     $password = $_POST["password"];
-    $password_confirm = $_POST["confpass"];
+    $password_confirm = $_POST["confpassword"];
     $firstname  = $_POST["firstname"];
     $lastname  = $_POST["lastname"];
     $age = $_POST["age"];
+    if (isset($_POST["assignManager"])) $manager = (int)$_POST["assignManager"]; // the id of the manager that the member will work for 
     
 
 
     //some constraints on the username 
-    if (!checkUsername($username) ){
+   /* if (!checkUsername($username) ){
         echo $errorUserMessage;
         header("location : signup.php");
+        exit();
     }
 
     // check password 
@@ -129,34 +117,46 @@ if (isset($_POST["submit"])){
     if (!checkName( $firstname) || !checkName( $lastname) ){
         echo $errorUserMessage;
         header("location : signup.php");
-    }
+    }*/
 
     // All checks are good 
     $stmt;
-    if ($_SESSION["WHO"]['isManager']){
-    $stmt = $conn->prepare("INSERT INTO TABLE
-                                    employee (firstname , lastname , age , username , employeePasswordHash , managerID ) 
-                                    values (? , ? , ? , ? , ? , ?  , ?)");
-    }else if ($_SESSION["WHO"]["isAdmin"]){
-    $stmt = $conn->prepare("INSERT INTO TABLE
-                                  manager (firstname , lastname , age , username , employeePasswordHash , managerID) 
-        values (? , ? , ? , ? , ? , ?  , ?)");
+    if ($_SESSION['signup'] == "admin"){
+    $stmt = $conn->prepare("INSERT INTO
+                                    `admin` (first_name , last_name , age , username , `password`) 
+                                    values (? , ? , ? , ? , ?)");
+    $stmt->bind_param("ssiss", $firstname, $lastname , $age ,$username , $password);
+    }else if ($_SESSION['signup'] == "manager"){
+    $stmt = $conn->prepare("INSERT INTO 
+                                  manager (firstname , lastname , age , username , managerPasswordHash) 
+        values (? , ? , ? , ? , ?)");
+    $stmt->bind_param("ssiss", $firstname, $lastname , $age ,$username , $password);
+    }else if ($_SESSION['signup'] == "member"){
+        $stmt = $conn->prepare("INSERT INTO 
+                                  employee (firstname , lastname , age , username , employeePasswordHash , managerID) 
+        values (? , ? , ? , ? , ? , ?)");
+    $stmt->bind_param("ssissi", $firstname, $lastname , $age ,$username ,$password ,  $manager);
     }
-
-    $stmt->bind_param("ssissis",$firstname , $lastname , $age , $username , $password , $_SESSION['managerID']);
 
     $stmt->execute();
-
-    if ($stmt->affected_rows() > 0){
-        echo "employee successfully added";
+    
+    if ($stmt->affected_rows > 0){
+        $_SESSION['added'] = true;
     }else{// shouldn't happen 
-        echo "ERROR CODE : 1002";
+        $_SESSION['added'] = false;
     }
-
     $stmt->close();
     $conn->close();
+
+    // Redirect after form submission to avoid re-submission on refresh
+if ($_SESSION['added']) {
+    header("Location: signusers.php?status=success");
+    exit();
+} else {
+    header("Location: signusers.php?status=failure");
+    exit();
+}
+
 }
 ?>
 
-</body>
-</html>

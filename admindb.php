@@ -16,8 +16,7 @@ session_start();
         <nav>
             <ul>
                 <li><a href="#">Profile</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -29,7 +28,7 @@ session_start();
 
     <div class="container">
        
-        <a href="signusers.html" class="card-link">
+        <a href="signusers.php" class="card-link">
             <div class="card">
                 <h3>👥 Users</h3>
                 <p>Manage user accounts and roles.</p>

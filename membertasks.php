@@ -33,7 +33,7 @@ if (!isset($_SESSION["ID"]) || !$_SESSION["WHO"]["isEmployee"]) { // check if so
                                     SELECT ID FROM project 
                                     WHERE project.projectName = ?
                                 )"); // change the status of the task that is assigned to the current user and corresponds to the given project name 
-        
+        // the reason we check for the project ID is because multiple projects can have the same task 
         if (!$stmt) {
             $message = "Failed to prepare query";
             echo "ERROR CODE 1003";
@@ -45,8 +45,10 @@ if (!isset($_SESSION["ID"]) || !$_SESSION["WHO"]["isEmployee"]) { // check if so
         
         if ($stmt->affected_rows > 0) {
             $message = "Status successfully updated";
+            // refresh page to update select tags 
+            header("Location: ".$_SERVER['PHP_SELF']);
+            exit;
         }
-        
         $stmt->close();
         $conn->close();
     }
@@ -82,10 +84,14 @@ if (!isset($_SESSION["ID"]) || !$_SESSION["WHO"]["isEmployee"]) { // check if so
                     <label for="status<?php echo $task['task_id']; ?>">Status:</label>
                     <select name="status" id="status<?php echo $task['task_id']; ?>">
                         <option value="Pending" <?php if ($task['status'] == 'Pending') echo 'selected'; ?>>Not Started</option>
-                        <option value="In Progress" <?php if ($task['status'] == 'In progress') echo 'selected'; ?>>In Progress</option>
+                        <option value="In Progress" <?php if ($task['status'] == 'In Progress') echo 'selected'; ?>>In Progress</option>
                         <option value="Completed" <?php if ($task['status'] == 'Completed') echo 'selected'; ?>>Done</option>
                     </select>
-                    <input type='text' name='projectName' value='<?php echo htmlspecialchars($task['projectName']); ?>' placeholder="Enter project's name"/>
+                    <div class="project-name-container">
+                        <label>Project:</label>
+                        <span class="project-name"><?php echo htmlspecialchars($task['projectName']); ?></span>
+                        <input type="hidden" name="projectName" value="<?php echo htmlspecialchars($task['projectName']); ?>" />
+                    </div>
                     <input type='hidden' name='taskID' value='<?php echo $task['task_id']; ?>'/>
                 </div>
                 <div class="form-group file-upload-container">
@@ -96,7 +102,7 @@ if (!isset($_SESSION["ID"]) || !$_SESSION["WHO"]["isEmployee"]) { // check if so
         <?php endforeach; ?>
         <?php else: ?>
             <div class='no-tasks-message'>
-                <p>No tasks assigned to you.</p>
+                <p class = "no_tasks_message"><?php echo $message ?></p>
             </div>
         <?php endif; ?>
         </div>

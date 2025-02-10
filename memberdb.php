@@ -1,5 +1,21 @@
 <?php
 session_start();
+
+include "establisDBconnection.php";
+
+$stmt = $conn->prepare("SELECT firstName , lastName FROM employee 
+                        WHERE employee.ID = ?");
+$stmt->bind_param("i" , $_SESSION['ID']['employeeID']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+
+$row = $result->fetch_assoc();
+if ($result->num_rows == 1){// should be only one manager in results 
+    $name = $row['firstName']." ".$row['lastName'];
+}
+$stmt->close();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,14 +41,13 @@ session_start();
         <nav>
             <ul>
                 <li><a href="#">Profile</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
     </header>
 
     <section class="hero">
-        <h2>Welcome, <span>Member!</span></h2>
+        <h2>Welcome, <span>Member <?php echo$name;  ?></span></h2>
         <p>Here are the tasks assigned to you.</p>
     </section>
     

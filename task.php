@@ -82,8 +82,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit']) && $_POST['
     <h1><span style="color: white;">Table of </span> <span>Tasks</span></h1>
     <nav>
         <ul>
-            <li><a href="memberdb.php">Dashboard</a></li>
-            <li><a href="logout.html">Logout</a></li>
+            <?php if ($_SESSION["WHO"]["isManager"]){
+            echo "<li><a href=\"managerdb.php\">Dashboard</a></li>";
+            }else if ($_SESSION["WHO"]["isEmployee"]){
+            echo "<li><a href=\"memberdb.php\">Dashboard</a></li>";
+            }else if ($_SESSION["WHO"]["isAdmin"]){
+            echo "<li><a href=\"admindb.php\">Dashboard</a></li>";
+            }else{
+                // shouldn't happen
+                echo "wtf";
+            }
+            ?>
+            <li><a href="logout.php">Logout</a></li>
         </ul>
     </nav>
 </header>
@@ -171,7 +181,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit']) && $_POST['
                                 <td>{$row['status']}</td>
                                 <td>{$row['projectName']}</td>
                                 <td>{$row['ID']}</td>";?>
+                                <?php if(!$_SESSION['WHO']['isEmployee']){?>
                                 <td><a href="#" class="delete-task card-link" data-id="<?php echo $row['task_id']; ?>">Delete</a></td>
+                                <?php }?>
                                 <?php echo"
                             </tr>";
                     }
