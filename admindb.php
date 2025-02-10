@@ -6,7 +6,6 @@ if (!$_SESSION["WHO"]['isAdmin'] || $_SESSION['ID']['adminID'] == -1){
     exit();
 }
 
-print_r($_SESSION['WHO']);
 
 ?>
 <!DOCTYPE html> 
