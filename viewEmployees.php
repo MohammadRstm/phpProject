@@ -14,9 +14,15 @@ $isAdmin = $_SESSION['WHO']['isAdmin'] ?? false;
 $isManager = $_SESSION['WHO']['isManager'] ?? false;
 
 // Query to get all employees (both managers and admins can see all employees)
-$query = "SELECT ID, firstName, lastName FROM employee";
+if ($_SESSION["WHO"]["isManager"]){
+$query = "SELECT ID, firstName, lastName FROM employee WHERE managerID = ?";
 
 $stmt = $conn->prepare($query);
+$stmt->bind_param("i", $_SESSION["ID"]["managerID"]);
+}else if ($_SESSION["WHO"]["isAdmin"]){
+    $query = "SELECT ID, firstName, lastName FROM employee";
+    $stmt = $conn->prepare($query);
+}
 $stmt->execute();
 $result = $stmt->get_result();
 $employees = $result->fetch_all(MYSQLI_ASSOC);
@@ -46,7 +52,14 @@ $dashboardPage = $isAdmin ? "admindb.php" : ($isManager ? "managerdb.php" : "#")
             border-radius: 8px;
             overflow: hidden;
         }
+
+        .card-link{
+            text-decoration: none;
+            color:red;
+        }
+
         th, td {
+
             padding: 12px;
             text-align: left;
             border: 1px solid #333;
@@ -120,6 +133,9 @@ $dashboardPage = $isAdmin ? "admindb.php" : ($isManager ? "managerdb.php" : "#")
                         <td><?= htmlspecialchars($employee['ID']) ?></td>
                         <td><?= htmlspecialchars($employee['firstName']) ?></td>
                         <td><?= htmlspecialchars($employee['lastName']) ?></td>
+                        <?php if ($_SESSION["WHO"]["isAdmin"]){ ?>
+                        <td><a href="#" class="delete-task card-link" data-id="<?php echo $employee['ID']; ?>">fire</a></td>
+                        <?php } ?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -130,4 +146,53 @@ $dashboardPage = $isAdmin ? "admindb.php" : ($isManager ? "managerdb.php" : "#")
         &copy; 2025 Project Tracker Pro.
     </footer>
 </body>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".delete-task").forEach(function (deleteBtn) {
+        deleteBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            let employeeID = this.getAttribute("data-id");
+            console.log("Manager ID to delete:", employeeID); // Debugging
+
+            if (!employeeID) {
+                alert("Error: Manager ID not found.");
+                return;
+            }
+
+            let replacementID = prompt("Enter the ID of the replacement employee(for tasks):");
+            if (!replacementID || isNaN(replacementID) || replacementID.trim() === "") {
+                alert("Error: Invalid replacement ID.");
+                return;
+            }
+
+            let row = this.closest("tr");
+
+            if (confirm(`Are you sure you want to delete employee ID ${employeeID} and replace them with employee ID ${replacementID}?`)) {
+                fetch("deleteEmployees.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `delete=${encodeURIComponent(employeeID)}&replacement=${encodeURIComponent(replacementID)}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Server Response:", data); // Debugging
+                    if (data.trim() === "success") {
+                        row.remove();
+                    } else {
+                        alert("Failed to delete the manager: " + data);
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    alert("Error deleting the manager.");
+                });
+            }
+        });
+    });
+});
+</script>
+
+</script>
+
 </html>

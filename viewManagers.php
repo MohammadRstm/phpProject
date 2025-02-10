@@ -22,6 +22,10 @@ if (!$result) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         /* Table specific styles */
+        .card-link{
+            text-decoration:none ;
+            color :red;
+        }
         table {
             width: 70%;
             margin: 20px auto;
@@ -165,6 +169,7 @@ if (!$result) {
                         <td><?php echo $row['userName']; ?></td>
                         <td><?php echo $row['dateOfEntry']; ?></td>
                         <td><?php echo $row['dateOfRetirement'] ?: 'N/A'; ?></td>
+                        <td><a href="#" class="delete-task card-link" data-id="<?php echo $row['ID']; ?>">fire</a></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
@@ -173,4 +178,53 @@ if (!$result) {
 
     
 </body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".delete-task").forEach(function (deleteBtn) {
+        deleteBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            let managerID = this.getAttribute("data-id");
+            console.log("Manager ID to delete:", managerID); // Debugging
+
+            if (!managerID) {
+                alert("Error: Manager ID not found.");
+                return;
+            }
+
+            let replacementID = prompt("Enter the ID of the replacement manager:");
+            if (!replacementID || isNaN(replacementID) || replacementID.trim() === "") {
+                alert("Error: Invalid replacement ID.");
+                return;
+            }
+
+            let row = this.closest("tr");
+
+            if (confirm(`Are you sure you want to delete manager ID ${managerID} and replace them with manager ID ${replacementID}?`)) {
+                fetch("deleteManagers.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `delete=${encodeURIComponent(managerID)}&replacement=${encodeURIComponent(replacementID)}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Server Response:", data); // Debugging
+                    if (data.trim() === "success") {
+                        row.remove();
+                    } else {
+                        alert("Failed to delete the manager: " + data);
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    alert("Error deleting the manager.");
+                });
+            }
+        });
+    });
+});
+</script>
+
+
 </html>
