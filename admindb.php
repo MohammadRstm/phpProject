@@ -46,7 +46,6 @@ $conn->close();
     </section>
 
     <div class="container">
-       
         <a href="signusers.php" class="card-link">
             <div class="card">
                 <h3>👥 Users</h3>
@@ -61,11 +60,27 @@ $conn->close();
             </div>
         </a>
 
-        <a href = "task.php" class = "card-link">
-        <div class="card">
-            <h3>✅ Tasks</h3>
-            <p>Manage and monitor tasks assigned across all projects.</p>
-        </div>
+        <a href="task.php" class="card-link">
+            <div class="card">
+                <h3>✅ Tasks</h3>
+                <p>Manage and monitor tasks assigned across all projects.</p>
+            </div>
+        </a>
+
+        <!-- New card for View Employees -->
+        <a href="viewEmployees.php" class="card-link">
+            <div class="card">
+                <h3>👥 View Employees</h3>
+                <p>View and manage all employee details.</p>
+            </div>
+        </a>
+
+        <!-- New card for View Managers -->
+        <a href="viewManagers.php" class="card-link">
+            <div class="card">
+                <h3>👔 View Managers</h3>
+                <p>View and manage all manager details.</p>
+            </div>
         </a>
     </div>
 
