@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include "establisDBconnection.php";
 
 // Check if the user is logged in
