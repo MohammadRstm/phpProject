@@ -1,6 +1,11 @@
 <?php 
 session_start();
 
+if (!isset($_SESSION["WHO"])){
+    header("Location:login.php");
+    exit();
+}
+
 // database connection
 include "establisDBconnection.php";
 
