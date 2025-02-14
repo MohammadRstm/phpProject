@@ -108,12 +108,10 @@ if (isset($_GET["member"])) {
                     <label for="confpassword">Confirm Password</label>
                     <input type="password" id="confpassword" name="confpassword" placeholder="Re-enter password" required>
                 </div>
-                <?php if(!$_SESSION["WHO"]["isAdmin"]){ ?>
                 <div class="form-group">
                     <label for="age">Age</label>
                     <input type="number" id="age" name="age" placeholder="Enter age" value="<?= $age ?>" min = '18' max = '100' required>
                 </div>
-                <?php } ?>
                 <?php if (isset($_GET['member']) && $_GET['member'] == 1) { ?>
                     <div class="form-group">
                         <label for="assignManager">Assign A Manager To Member</label>

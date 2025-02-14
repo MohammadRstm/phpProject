@@ -283,3 +283,19 @@ adding to tasks testTask25-02-10 in Login helper
 25-02-11 in Login helper
 25-02-11 Role: member
 25-02-12 in Login helper
+25-02-13 in Login helper
+25-02-13 Role: admin
+adding to tasks Re-structure DataBase25-02-14 in Login helper
+25-02-14 Role: admin
+adding to tasks Database Remodel25-02-14 in Login helper
+25-02-14 Role: admin
+25-02-14 in Login helper
+25-02-14 Role: admin
+adding to tasks Database managment25-02-14 in Login helper
+25-02-14 Role: admin
+25-02-14 in Login helper
+25-02-14 Role: manager
+25-02-14 in Login helper
+25-02-14 Role: member
+25-02-14 in Login helper
+25-02-14 Role: member

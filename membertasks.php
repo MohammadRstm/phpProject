@@ -69,7 +69,7 @@ if (!isset($_SESSION["ID"]) || !$_SESSION["WHO"]["isEmployee"]) { // check if so
         <nav>
             <ul>
                   <li><a href="memberdb.php">Dashboard</a></li>
-                <li><a href="#">Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
     </header>
