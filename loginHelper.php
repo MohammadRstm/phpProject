@@ -91,6 +91,7 @@ if ($log){
                 $_SESSION["WHO"]["isManager"] = false;
                 $stmt->close();
                 $conn->close();
+                header("Location:login.php");
                 exit;
             }else{// shouldnt happen 
                 $_SESSION["WHO"]["isManager"] = false;
