@@ -17,7 +17,7 @@ if (isset($_GET["assignManager"])) $selectedManager = htmlspecialchars($_GET["as
 
 if (isset($_GET["member"])) {
     $_SESSION['signup'] = 'member'; // this is to help sign.php know who is being signed up
-    $managers = [];
+    $managers = [];// get the list of managers 
     $result = $conn->query("SELECT ID, firstName, lastName FROM manager");
     
     if ($result->num_rows > 0) {
@@ -127,7 +127,8 @@ if (isset($_GET["member"])) {
                 <?php } ?>
 
                 <!-- Display Error Messages -->
-                <?php if (isset($_GET['username'])) { ?>
+                 <?php if(isset($_GET['error']) && $_GET['error'] == 1){ ?>
+                <?php if ((isset($_GET['member'])|| isset($_GET['admin'])||isset($_GET['manager'])) && !isset($_GET['password'])) { ?>
                     <h4 style="color:red;">Username must be greater than 6 characters</h4>
                 <?php } else if (isset($_GET['password'])) { 
                     if (isset($_GET['missmatch'])) { ?>
@@ -149,7 +150,7 @@ if (isset($_GET["member"])) {
                 <?php if (isset($_GET['userFound'])){ ?>
                     <h4 style="color:red;">Username already exists</h4>
                 <?php } ?>
-
+                <?php }?>
                 <button type="submit" name="submit" class="signup-btn">Create User</button>
             </form>
         </div>

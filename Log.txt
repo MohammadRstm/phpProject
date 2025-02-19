@@ -299,6 +299,7 @@ adding to tasks Database managment25-02-14 in Login helper
 25-02-14 Role: member
 25-02-14 in Login helper
 25-02-14 Role: member
+<<<<<<< HEAD
 25-02-16 in Login helper
 25-02-16 Role: member
 25-02-17 in Login helper
@@ -325,17 +326,26 @@ adding to tasks Database managment25-02-14 in Login helper
 25-02-17 Role: admin
 25-02-17 in Login helper
 25-02-17 Role: member
+=======
+>>>>>>> f6f81ba64cc04a2099d393d01858badea65b0b88
 25-02-17 in Login helper
 25-02-17 Role: admin
 25-02-17 in Login helper
 25-02-17 Role: admin
 25-02-17 in Login helper
+<<<<<<< HEAD
 25-02-17 Role: member
+=======
+25-02-17 Role: admin
+25-02-17 in Login helper
+25-02-17 Role: admin
+>>>>>>> f6f81ba64cc04a2099d393d01858badea65b0b88
 25-02-17 in Login helper
 25-02-17 Role: admin
 25-02-17 in Login helper
 25-02-17 Role: admin
 25-02-17 in Login helper
+<<<<<<< HEAD
 25-02-17 Role: member
 25-02-17 in Login helper
 25-02-17 Role: admin
@@ -410,10 +420,13 @@ adding to tasks testtask8925-02-17 in Login helper
 25-02-17 in Login helper
 25-02-17 Role: manager
 adding to tasks taskdatabaseadding to tasks sarahadding to tasks sarah25-02-17 in Login helper
+=======
+>>>>>>> f6f81ba64cc04a2099d393d01858badea65b0b88
 25-02-17 Role: admin
 25-02-17 in Login helper
 25-02-17 Role: admin
 25-02-17 in Login helper
+<<<<<<< HEAD
 25-02-17 Role: manager
 25-02-17 in Login helper
 25-02-17 Role: manager
@@ -421,3 +434,9 @@ adding to tasks taskdatabaseadding to tasks sarahadding to tasks sarah25-02-17 i
 25-02-17 Role: admin
 25-02-17 in Login helper
 25-02-17 Role: manager
+=======
+25-02-17 Role: admin
+25-02-17 in Login helper
+25-02-17 Role: admin
+adding to tasks Database
+>>>>>>> f6f81ba64cc04a2099d393d01858badea65b0b88

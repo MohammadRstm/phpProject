@@ -89,7 +89,13 @@ if (isset($_POST["submit"])){
     ]);
 
     if (!checkUsername($username)) {
-        header("Location: signusers.php?$queryParams&username=1");
+        if ($_SESSION['signup'] == "admin"){
+        header("Location: signusers.php?$queryParams&admin=1&error=1");
+        }elseif ($_SESSION['signup'] == "member"){
+        header("Location: signusers.php?$queryParams&member=1&error=1");
+        }elseif ($_SESSION['signup'] == "manager"){
+        header("Location: signusers.php?$queryParams&manager=1&error=1");
+        }
         exit();
     }else if (checkUsername($username)) {// check if already in data base
         $stmt = $conn->prepare("SELECT * FROM employee WHERE username = ?");
@@ -107,7 +113,7 @@ if (isset($_POST["submit"])){
 
 
         if ($res->num_rows > 0 || $res1->num_rows > 0 || $res2->num_rows > 0) {// if user name exists anywhere in the data base then refuse to add
-            header ("Location:signusers.php?$queryParams&userFound=1");
+            header ("Location:signusers.php?$queryParams&userFound=1&error=1");
             $stmt->close();
             exit();
         }
@@ -128,7 +134,7 @@ if (isset($_POST["submit"])){
             default => ""
         };
 
-    header("Location: signusers.php?$queryParams&password=1&$passwordError");
+    header("Location: signusers.php?$queryParams&password=1&$passwordError&error=1");
         exit();
     }
 }
