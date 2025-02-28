@@ -1,7 +1,7 @@
 <?php 
 session_start();
 include "establisDBconnection.php";
-
+    
 if (!$_SESSION["WHO"]['isAdmin'] || $_SESSION['ID']['adminID'] == -1){
     header('Location:login.php');
     exit();
